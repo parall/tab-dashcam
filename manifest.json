@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "标签页保险箱 Tab Vault",
+  "version": "1.0.0",
+  "description": "自动记录所有窗口与标签页的状态，误关窗口或浏览器崩溃后可一键整窗恢复。数据仅存本地，不上传。",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "tabs",
+    "sessions",
+    "storage",
+    "unlimitedStorage",
+    "alarms",
+    "notifications",
+    "sidePanel"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "标签页保险箱",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel/panel.html"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "incognito": "not_allowed"
+}

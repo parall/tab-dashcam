@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>标签页保险箱 · 设置</title>
+<link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="head">
+      <img class="logo" src="../icons/icon48.png" alt="">
+      <div>
+        <h1>标签页保险箱</h1>
+        <p class="sub">自动记录所有窗口与标签页，误关、崩溃后可一键整窗恢复</p>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>记录</h2>
+
+      <label class="row">
+        <div class="row-t">
+          <span>自动记录</span>
+          <small>每 1 分钟检查一次，标签有变化才写入新快照</small>
+        </div>
+        <input type="checkbox" id="autoSnapshot" class="switch">
+      </label>
+
+      <label class="row">
+        <div class="row-t">
+          <span>关闭窗口时提醒我</span>
+          <small>弹出系统通知，点一下就能把整个窗口恢复</small>
+        </div>
+        <input type="checkbox" id="notifyOnClose" class="switch">
+      </label>
+
+      <label class="row">
+        <div class="row-t">
+          <span>提醒阈值</span>
+          <small>窗口里的标签数达到这个数量才提醒</small>
+        </div>
+        <div class="row-c">
+          <input type="number" id="minTabsForNotify" min="2" max="50" step="1" class="num">
+          <span class="unit">个标签</span>
+        </div>
+      </label>
+
+      <label class="row">
+        <div class="row-t">
+          <span>启动时显示上次会话</span>
+          <small>浏览器启动后，在侧边栏顶部提示恢复上一次的标签</small>
+        </div>
+        <input type="checkbox" id="showRecoveryCard" class="switch">
+      </label>
+
+      <label class="row">
+        <div class="row-t">
+          <span>最多保留</span>
+          <small>超出后自动清理最旧的记录</small>
+        </div>
+        <div class="row-c">
+          <input type="number" id="maxSnapshots" min="50" max="1000" step="50" class="num">
+          <span class="unit">条</span>
+        </div>
+      </label>
+
+      <label class="row">
+        <div class="row-t">
+          <span>保留时长</span>
+          <small>超过这个天数的记录会被删除（1 天内全留，7 天内按小时留，更早按天留）</small>
+        </div>
+        <div class="row-c">
+          <input type="number" id="retentionDays" min="7" max="365" step="1" class="num">
+          <span class="unit">天</span>
+        </div>
+      </label>
+    </section>
+
+    <section class="card">
+      <h2>数据</h2>
+      <div class="stat">
+        <div><strong id="statCount">–</strong><span>条记录</span></div>
+        <div><strong id="statSize">–</strong><span>占用空间</span></div>
+        <div><strong id="statWin">–</strong><span>当前窗口</span></div>
+        <div><strong id="statTab">–</strong><span>当前标签</span></div>
+      </div>
+
+      <div class="btns">
+        <button id="btnExport" class="btn solid">导出备份文件</button>
+        <button id="btnImport" class="btn">从备份导入</button>
+        <button id="btnClear" class="btn danger">清空全部记录</button>
+        <input type="file" id="fileInput" accept=".json,application/json" hidden>
+      </div>
+      <p class="hint">备份是一个 JSON 文件，包含全部快照和设置，可以存到网盘或另一台电脑上再导入。</p>
+    </section>
+
+    <section class="card">
+      <h2>隐私</h2>
+      <ul class="facts">
+        <li><b>全部数据只存在这台电脑的浏览器里</b>，插件不联网、不上传、不统计。</li>
+        <li>只读取标签页的<b>网址、标题、图标、顺序、固定状态和分组</b>，不读取网页内容、不读取输入框、不读取密码。</li>
+        <li>无痕窗口不会被记录（插件在无痕模式下不运行）。</li>
+        <li>随时可以「清空全部记录」，或直接卸载插件，数据随之删除。</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>怎么用</h2>
+      <ol class="steps">
+        <li>正常用浏览器。插件在后台自动记录，不用做任何操作。</li>
+        <li>点浏览器右上角的插件图标 → 选「打开时间线」，或固定在侧边栏常驻。</li>
+        <li>误关窗口时，点通知里的「立即恢复」；或打开时间线，点那条「已关闭」的记录 → 整窗恢复。</li>
+      </ol>
+      <p class="hint">小提示：Chrome 自带的历史记录是按访问时间排列的流水账，还原不了窗口。这个插件存的是「某一刻所有窗口的完整状态」，所以能整窗还原。</p>
+    </section>
+
+    <footer class="foot">
+      <span id="verText"></span>
+      <span class="dot">·</span>
+      <span>本地优先，不上传任何数据</span>
+    </footer>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script type="module" src="options.js"></script>
+</body>
+</html>

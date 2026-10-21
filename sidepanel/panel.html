@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>标签页保险箱</title>
+<link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <div class="app">
+    <header class="hd">
+      <div class="hd-l">
+        <img class="logo" src="../icons/icon32.png" alt="">
+        <div class="hd-t">
+          <h1>标签页保险箱</h1>
+          <p id="sub" class="sub">正在读取…</p>
+        </div>
+      </div>
+      <button id="btnSnap" class="icon-btn" title="立即记录当前状态">＋</button>
+    </header>
+
+    <div id="notices" class="notices"></div>
+
+    <main id="timeline" class="timeline">
+      <div class="empty">正在读取快照…</div>
+    </main>
+
+    <footer class="ft">
+      <button id="btnOptions" class="link">设置</button>
+      <span class="sep">·</span>
+      <button id="btnExport" class="link">导出备份</button>
+      <span class="grow"></span>
+      <span class="foot-note">仅本地存储</span>
+    </footer>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script type="module" src="panel.js"></script>
+</body>
+</html>

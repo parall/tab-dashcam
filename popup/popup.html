@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>标签页保险箱</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="pop">
+    <header class="pop-h">
+      <img class="logo" src="../icons/icon32.png" alt="">
+      <span class="name">标签页保险箱</span>
+      <span id="ver" class="ver"></span>
+    </header>
+
+    <div id="alert" class="alert hidden"></div>
+
+    <button id="btnSnap" class="act">立即记录当前状态</button>
+
+    <div class="sec">
+      <span>最近记录</span>
+      <button id="btnPanel" class="link">打开时间线 →</button>
+    </div>
+
+    <div id="recent" class="recent"></div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
