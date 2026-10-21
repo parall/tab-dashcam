@@ -22,8 +22,8 @@ Chrome 自带的历史记录救不了你。它是**按访问时间排列的流�
 
 ### 方式一：下载安装包（推荐）
 
-1. 点进 [`dist/tab-vault-v1.0.0.zip`](dist/tab-vault-v1.0.0.zip)，在页面右上角点 **Download** 图标下载
-2. 双击解压，得到一个 `tab-vault-v1.0.0` 文件夹
+1. 点进 [`dist/tab-vault-latest.zip`](dist/tab-vault-latest.zip)，在页面右上角点 **Download** 图标下载
+2. 双击解压，得到一个文件夹（名字类似 `tab-vault-v1.0.0`）
 3. 打开 **Chrome 浏览器**，地址栏输入 `chrome://extensions` 回车
 4. 打开页面**右上角的「开发者模式」开关**
 5. 点左上角出现的 **「加载已解压的扩展程序」**，选择刚解压出来的那个文件夹（选文件夹本身）
