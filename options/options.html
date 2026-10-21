@@ -96,6 +96,16 @@
     </section>
 
     <section class="card">
+      <h2>窗口诊断</h2>
+      <p class="hint">如果侧边栏显示的窗口数和你屏幕上看到的不一致，点下面的按钮，把浏览器实际报告的窗口信息导出来。里面只有窗口位置和标签地址，不含任何网页内容。</p>
+      <div class="btns">
+        <button id="btnDiag" class="btn solid">生成诊断信息</button>
+        <button id="btnCopyDiag" class="btn">复制</button>
+      </div>
+      <pre id="diagOut" class="diag" hidden></pre>
+    </section>
+
+    <section class="card">
       <h2>隐私</h2>
       <ul class="facts">
         <li><b>全部数据只存在这台电脑的浏览器里</b>，插件不联网、不上传、不统计。</li>

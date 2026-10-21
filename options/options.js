@@ -2,6 +2,7 @@ import { getSettings, saveSettings, readTextFile } from '../lib/util.js';
 import { exportBackup, importBackup } from '../lib/backup.js';
 import { listIndex, clearAllSnapshots, estimateSize } from '../lib/db.js';
 import { currentStateSummary } from '../lib/model.js';
+import { buildWindowReport } from '../lib/diagnose.js';
 
 const $ = (id) => document.getElementById(id);
 let toastTimer = null;
@@ -108,6 +109,37 @@ $('btnClear').addEventListener('click', async () => {
   await chrome.storage.local.remove(['pendingClosedId', 'pendingClosedTs', 'startupCard', 'handledSessions']);
   toast('已清空全部记录');
   await refreshStats();
+});
+
+$('btnDiag').addEventListener('click', async () => {
+  const box = $('diagOut');
+  try {
+    const text = await buildWindowReport();
+    box.textContent = text;
+    box.hidden = false;
+    toast('已生成，可点「复制」发给我');
+  } catch (e) {
+    toast('生成失败：' + (e.message || ''));
+  }
+});
+
+$('btnCopyDiag').addEventListener('click', async () => {
+  const box = $('diagOut');
+  if (!box.textContent) {
+    $('btnDiag').click();
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(box.textContent);
+    toast('已复制到剪贴板');
+  } catch (e) {
+    const range = document.createRange();
+    range.selectNodeContents(box);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    toast('已选中，按 Cmd+C 复制');
+  }
 });
 
 load();

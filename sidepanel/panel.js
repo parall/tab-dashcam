@@ -351,7 +351,11 @@ async function doRestoreWindow(btn, win) {
   if (!btn.dataset.armed) {
     const dup = await findOpenDuplicate(win).catch(() => null);
     if (dup) {
-      toast(`这个窗口现在还开着（${dup.tabCount} 个标签），再点一次会多开一个副本`);
+      toast(
+        dup.exact
+          ? `这个窗口现在还开着（${dup.tabCount} 个标签），再点一次会多开一个副本`
+          : `这些标签里有 ${dup.same}/${dup.total} 个已经在另一个窗口开着，再点一次会多开一份`
+      );
       armButton(btn, '仍要再开？', '整窗恢复');
       return;
     }
