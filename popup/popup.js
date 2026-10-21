@@ -21,11 +21,26 @@ function toast(msg) {
 }
 
 async function openPanel() {
+  if (chrome.sidePanel && chrome.sidePanel.open) {
+    try {
+      const win = await chrome.windows.getCurrent();
+      await chrome.sidePanel.open({ windowId: win.id });
+      window.close();
+      return;
+    } catch (e) {
+      /* 落到下面的降级方案 */
+    }
+  }
+  // 没有侧边栏 API 的浏览器（Opera、Vivaldi 等）退化成独立小窗，功能一样
   try {
-    const win = await chrome.windows.getCurrent();
-    await chrome.sidePanel.open({ windowId: win.id });
+    await chrome.windows.create({
+      url: chrome.runtime.getURL('sidepanel/panel.html'),
+      type: 'popup',
+      width: 424,
+      height: 820,
+    });
   } catch (e) {
-    /* 旧版本浏览器不支持，静默失败 */
+    /* ignore */
   }
   window.close();
 }

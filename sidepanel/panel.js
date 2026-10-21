@@ -1,5 +1,11 @@
 import { listIndex, getSnapshot } from '../lib/db.js';
-import { restoreWindow, restoreSingleTab, restoreSnapshot } from '../lib/restore.js';
+import {
+  restoreWindow,
+  restoreSingleTab,
+  restoreSnapshot,
+  findOpenDuplicate,
+  countOpenDuplicates,
+} from '../lib/restore.js';
 import { currentStateSummary } from '../lib/model.js';
 import { exportBackup } from '../lib/backup.js';
 import {
@@ -85,9 +91,10 @@ function indexEntryOf(id) {
 
 function render() {
   const sub = document.getElementById('sub');
+  const now = `现在 ${state.summary.windows} 个窗口 · ${state.summary.tabs} 个标签`;
   sub.textContent = state.index.length
-    ? `${state.summary.windows} 个窗口 · ${state.summary.tabs} 个标签 · 已存 ${state.index.length} 条记录`
-    : `${state.summary.windows} 个窗口 · ${state.summary.tabs} 个标签 · 尚无记录`;
+    ? `${now} · 已存 ${state.index.length} 条记录`
+    : `${now} · 尚无记录`;
 
   renderNotices();
   renderTimeline();
@@ -270,8 +277,19 @@ function renderDetail(snap) {
     );
     const btn = el('button', 'btn-primary', '整窗恢复');
     btn.addEventListener('click', () => doRestoreWindow(btn, win));
+    if (win.dupOf) head.append(el('span', 'badge muted', `同窗口 ${win.dupOf}`));
     head.append(btn);
     wrap.append(head);
+
+    if (win.dupOf) {
+      wrap.append(
+        el(
+          'p',
+          'dup-note',
+          `内容和窗口 ${win.dupOf} 完全一样。多数情况是点「整窗恢复」时多开出来的副本，不是记录算错了。`
+        )
+      );
+    }
 
     const ul = el('ul', 'tabs');
     win.tabs.forEach((t) => ul.append(tabRow(t)));
@@ -305,8 +323,41 @@ function tabRow(tab) {
 
 /* ---------- 动作 ---------- */
 
+/**
+ * 把按钮切换成「二次确认」状态。返回 true 表示这一次算确认，可以继续。
+ * 4 秒内不再点就自动还原，避免按钮一直停在危险样式上。
+ */
+function armButton(btn, hint, label) {
+  btn.dataset.armed = '1';
+  btn.textContent = hint;
+  btn.classList.add('armed');
+  clearTimeout(btn._armTimer);
+  btn._armTimer = setTimeout(() => {
+    if (!btn.isConnected) return;
+    delete btn.dataset.armed;
+    btn.classList.remove('armed');
+    btn.textContent = label;
+  }, 4200);
+  return true;
+}
+
+function disarm(btn) {
+  clearTimeout(btn._armTimer);
+  delete btn.dataset.armed;
+  btn.classList.remove('armed');
+}
+
 async function doRestoreWindow(btn, win) {
-  const original = btn.textContent;
+  if (!btn.dataset.armed) {
+    const dup = await findOpenDuplicate(win).catch(() => null);
+    if (dup) {
+      toast(`这个窗口现在还开着（${dup.tabCount} 个标签），再点一次会多开一个副本`);
+      armButton(btn, '仍要再开？', '整窗恢复');
+      return;
+    }
+  }
+  disarm(btn);
+  const original = '整窗恢复';
   btn.disabled = true;
   btn.textContent = '恢复中…';
   try {
@@ -325,18 +376,31 @@ async function doRestoreWindow(btn, win) {
 }
 
 async function doRestoreAll(btn, snap) {
-  const original = btn.textContent;
+  const label = `恢复全部 ${snap.windows.length} 个窗口`;
+  if (!btn.dataset.armed) {
+    const dup = await countOpenDuplicates(snap.windows).catch(() => 0);
+    if (dup) {
+      toast(`其中 ${dup} 个窗口现在还开着，再点一次会多开副本`);
+      armButton(btn, '仍要恢复？', label);
+      return;
+    }
+  }
+  disarm(btn);
   btn.disabled = true;
   btn.textContent = '恢复中…';
   try {
     const n = await restoreSnapshot(snap, { focused: true });
     btn.textContent = `已恢复 ${n} 个窗口`;
     toast(`${n} 个窗口已恢复`);
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = label;
+    }, 1800);
   } catch (e) {
-    btn.textContent = original;
+    btn.disabled = false;
+    btn.textContent = label;
     toast('恢复失败');
   }
-  btn.disabled = false;
 }
 
 async function doRestorePending(btn) {
@@ -356,11 +420,23 @@ async function doRestorePending(btn) {
 }
 
 async function doRestoreStartup(btn, s) {
+  const snap = await getSnapshot(s.snapshotId).catch(() => null);
+  if (!snap) {
+    toast('这条记录已不存在');
+    return;
+  }
+  if (!btn.dataset.armed) {
+    const dup = await countOpenDuplicates(snap.windows).catch(() => 0);
+    if (dup) {
+      toast(`上一次的窗口现在还开着一部分，再点一次会多开副本`);
+      armButton(btn, '仍要恢复？', '恢复这个会话');
+      return;
+    }
+  }
+  disarm(btn);
   btn.disabled = true;
   btn.textContent = '恢复中…';
   try {
-    const snap = await getSnapshot(s.snapshotId);
-    if (!snap) throw new Error('记录已不存在');
     const n = await restoreSnapshot(snap, { focused: true });
     await chrome.runtime.sendMessage({ type: 'tv:dismiss-startup' }).catch(() => {});
     state.startup = null;

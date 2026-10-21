@@ -263,6 +263,15 @@ h1 {
 }
 .btn-primary:hover { background: #000; }
 .btn-primary:disabled { opacity: 0.5; cursor: default; }
+.btn-primary.armed,
+.btn-primary.armed:hover { background: var(--danger); }
+
+.dup-note {
+  margin: 0 0 5px;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
 
 .btn-danger {
   flex: none;
@@ -289,6 +298,12 @@ h1 {
 }
 .btn-ghost:hover { background: var(--surface); }
 .btn-ghost:disabled { opacity: 0.5; cursor: default; }
+.btn-ghost.armed,
+.btn-ghost.armed:hover {
+  background: var(--danger-soft);
+  border-color: var(--danger-line);
+  color: var(--danger);
+}
 
 .tabs {
   list-style: none;

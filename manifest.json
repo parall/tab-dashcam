@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "标签页保险箱 Tab Vault",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "自动记录所有窗口与标签页的状态，误关窗口或浏览器崩溃后可一键整窗恢复。数据仅存本地，不上传。",
   "minimum_chrome_version": "116",
   "permissions": [
