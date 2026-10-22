@@ -1,8 +1,10 @@
-# 标签页保险箱 · Tab Vault
+# 标签页保险箱 · Tab Dashcam
 
 给浏览器装一台行车记录仪：**持续记录所有窗口和标签页的状态**，误关窗口、浏览器崩溃、重启之后，能把「当时那一刻」整窗还原回来。
 
 Chrome / Edge 扩展 · Manifest V3 · 无联网、无上传、无统计
+
+**English**: a browser dashcam for your tabs — snapshots every window and tab locally, then restores a whole window (order, pinned, tab groups) after an accidental close or a crash. *Restore closed tabs · tab session manager · window backup · crash recovery.*
 
 ![界面预览](docs/screenshot.png)
 
@@ -22,8 +24,8 @@ Chrome 自带的历史记录救不了你。它是**按访问时间排列的流�
 
 ### 方式一：下载安装包（推荐）
 
-1. 点进 [`dist/tab-vault-v1.1.1.zip`](dist/tab-vault-v1.1.1.zip)，在页面右上角点 **Download** 图标下载
-2. 双击解压，得到一个文件夹（名字类似 `tab-vault-v1.1.1`）
+1. 点进 [`dist/tab-dashcam-v1.1.1.zip`](dist/tab-dashcam-v1.1.1.zip)，在页面右上角点 **Download** 图标下载
+2. 双击解压，得到一个文件夹（名字类似 `tab-dashcam-v1.1.1`）
 3. 打开 **Chrome 浏览器**，地址栏输入 `chrome://extensions` 回车
 4. 打开页面**右上角的「开发者模式」开关**
 5. 点左上角出现的 **「加载已解压的扩展程序」**，选择刚解压出来的那个文件夹（选文件夹本身）
@@ -32,7 +34,7 @@ Chrome 自带的历史记录救不了你。它是**按访问时间排列的流�
 
 ### 方式二：下载整个仓库
 
-点页面右上角绿色 **Code → Download ZIP**，解压后得到 `tab-vault-main` 文件夹，然后从上面的第 3 步开始做（选 `tab-vault-main` 文件夹）。
+点页面右上角绿色 **Code → Download ZIP**，解压后得到 `tab-dashcam-main` 文件夹，然后从上面的第 3 步开始做（选 `tab-dashcam-main` 文件夹）。
 
 装好之后**不需要做任何操作**，正常用浏览器就行。
 
@@ -141,7 +143,7 @@ Edge 是 Chromium 内核，**装的是同一个文件夹，不用改任何东西
 - Manifest V3，最低 Chrome 116（`sidePanel.open` 需要）
 - 权限：`tabs`（读标签网址标题）、`sessions`（取回刚关闭窗口的标签）、`storage` + `unlimitedStorage`（本地存快照）、`alarms`（定时快照）、`notifications`（误关提醒）、`sidePanel`（主界面）
 - **无 host permissions**，不向任何页面注入脚本，不使用远程代码
-- 修改代码后重新打包：`GITHUB_TOKEN=xxx python3 tools/sync_to_github.py "改动说明"`。脚本会自动按 `manifest.json` 的版本号打包成 `dist/tab-vault-v{版本}.zip`、把 README 里的下载链接改成当前版本、并删掉 `dist/` 里的旧包
+- 修改代码后重新打包：`GITHUB_TOKEN=xxx python3 tools/sync_to_github.py "改动说明"`。脚本会自动按 `manifest.json` 的版本号打包成 `dist/tab-dashcam-v{版本}.zip`、把 README 里的下载链接改成当前版本、并删掉 `dist/` 里的旧包
 
 ---
 
